@@ -22,12 +22,15 @@ const profile = {
     "Alex could not sleep and was stuck checking their phone after feeling rejected.",
 };
 
-const OPENAI_API_KEY = "REPLACE_WITH_YOUR_OPENAI_API_KEY";
-const BRIDGE_SYSTEM_PROMPT =
-  "You are Bridge, a warm, calm support assistant. You are NOT a therapist. Your job is to help the user organize their thoughts and gently guide them toward human support when appropriate. Keep replies short, warm, and conversational. Never validate distorted beliefs. Never act like a best friend.";
-
 let userMessageCount = 0;
 let gearShiftShown = false;
+const conversationMessages = [
+  {
+    role: "assistant",
+    content:
+      "I’m here to help you sort through the moment gently. You can vent, slow things down, or get ready to talk with someone.",
+  },
+];
 
 function setView(id) {
   navItems.forEach((item) => item.classList.toggle("active", item.dataset.view === id));
@@ -43,6 +46,10 @@ function addMessage(role, text) {
   messages.append(article);
   messages.scrollTop = messages.scrollHeight;
   return article;
+}
+
+function rememberMessage(role, content) {
+  conversationMessages.push({ role, content });
 }
 
 function addThinkingMessage() {
@@ -75,7 +82,10 @@ function addGearShiftCard() {
 
 function handleGearShiftAction(action) {
   if (action === "prep") {
-    addMessage("assistant", "Absolutely. We can make this easier to bring into session. What is the main thing you want your therapist to understand first?");
+    const reply =
+      "Absolutely. We can make this easier to bring into session. What is the main thing you want your therapist to understand first?";
+    addMessage("assistant", reply);
+    rememberMessage("assistant", reply);
     profile.nextStep = "Therapy prep started";
     renderProfile();
     quietContext?.classList.remove("is-hidden");
@@ -83,11 +93,17 @@ function handleGearShiftAction(action) {
   }
 
   if (action === "later") {
-    addMessage("assistant", "Of course. We can leave it there for now. You can come back to prep whenever it feels useful.");
+    const reply =
+      "Of course. We can leave it there for now. You can come back to prep whenever it feels useful.";
+    addMessage("assistant", reply);
+    rememberMessage("assistant", reply);
     return;
   }
 
-  addMessage("assistant", "That is okay. We can keep talking gently, and I will help you keep it organized as we go.");
+  const reply =
+    "That is okay. We can keep talking gently, and I will help you keep it organized as we go.";
+  addMessage("assistant", reply);
+  rememberMessage("assistant", reply);
 }
 
 function resizeComposer() {
@@ -118,35 +134,24 @@ function inferProfile(text) {
   renderProfile();
 }
 
-async function bridgeReply(text) {
-  if (OPENAI_API_KEY === "REPLACE_WITH_YOUR_OPENAI_API_KEY") {
-    return "Add your OpenAI API key in script.js, and I’ll respond here. For now, we can still keep this gentle and organized.";
-  }
-
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+async function bridgeReply(messagesForRequest) {
+  const response = await fetch("/api/chat", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${OPENAI_API_KEY}`,
     },
     body: JSON.stringify({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: BRIDGE_SYSTEM_PROMPT },
-        { role: "user", content: text },
-      ],
-      temperature: 0.7,
-      max_tokens: 140,
+      messages: messagesForRequest,
     }),
   });
 
   if (!response.ok) {
-    throw new Error(`OpenAI request failed: ${response.status}`);
+    throw new Error(`Chat request failed: ${response.status}`);
   }
 
   const data = await response.json();
   return (
-    data.choices?.[0]?.message?.content?.trim() ||
+    data.reply?.trim() ||
     "I’m here with you. Let’s keep this small and choose one gentle next step."
   );
 }
@@ -217,6 +222,7 @@ if (composer) {
 
     userMessageCount += 1;
     addMessage("user", text);
+    rememberMessage("user", text);
     inferProfile(text);
     quietContext?.classList.remove("is-hidden");
     chatInput.value = "";
@@ -225,21 +231,25 @@ if (composer) {
     const crisisResponse = safetyReply(text);
     if (crisisResponse) {
       addMessage("assistant", crisisResponse);
+      rememberMessage("assistant", crisisResponse);
       if (userMessageCount >= 3) addGearShiftCard();
       return;
     }
 
     const thinking = addThinkingMessage();
+    const messagesForRequest = [...conversationMessages];
     window.setTimeout(async () => {
       thinking.remove();
       try {
-        addMessage("assistant", await bridgeReply(text));
+        const reply = await bridgeReply(messagesForRequest);
+        addMessage("assistant", reply);
+        rememberMessage("assistant", reply);
       } catch (error) {
         console.error(error);
-        addMessage(
-          "assistant",
-          "I’m having trouble connecting right now. We can still keep this simple: what is one piece of this you want to organize first?"
-        );
+        const fallback =
+          "I’m having trouble connecting right now. We can still keep this simple: what is one piece of this you want to organize first?";
+        addMessage("assistant", fallback);
+        rememberMessage("assistant", fallback);
       }
       if (userMessageCount >= 3) addGearShiftCard();
     }, 650);
