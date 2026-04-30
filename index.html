@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bridge Consumer</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="consumer-app">
+    <div class="ambient-bg" aria-hidden="true"></div>
+    <div class="app-frame">
+      <header class="consumer-header">
+        <a class="brand" href="index.html" aria-label="Bridge home">
+          <span class="brand-mark">B</span>
+          <span>Bridge</span>
+        </a>
+        <nav class="top-nav" aria-label="App views">
+          <button class="nav-link active" data-view="chat">Chat</button>
+          <button class="nav-link" data-view="profile">Profile</button>
+          <button class="nav-link" data-view="consent">Share</button>
+          <a class="nav-link provider-link" href="provider.html">Provider view</a>
+        </nav>
+      </header>
+
+      <main class="consumer-shell">
+        <section class="view active" id="chat" aria-labelledby="chat-title">
+          <section class="chat-home" aria-label="Bridge chat">
+            <div class="chat-intro">
+              <p class="eyebrow">Private support</p>
+              <h1 id="chat-title">How are you feeling?</h1>
+              <p>Share whatever is on your mind. Bridge can help you organize it, then you decide what gets saved or shared.</p>
+            </div>
+
+            <div class="messages chat-thread" id="messages" aria-live="polite">
+              <article class="message assistant">
+                <p>I’m here to help you sort through the moment gently. You can vent, slow things down, or get ready to talk with someone.</p>
+              </article>
+            </div>
+
+            <form class="composer chatgpt-composer" id="composer">
+              <label class="sr-only" for="chat-input">Message Bridge</label>
+              <textarea id="chat-input" rows="1" placeholder="Message Bridge..."></textarea>
+              <button class="send-button" type="submit" aria-label="Send message">
+                <span aria-hidden="true">↑</span>
+              </button>
+            </form>
+
+            <div class="prompt-grid" aria-label="Support paths">
+              <button data-template="I need to talk through something that happened.">
+                <span>Talk it through</span>
+                <strong>Start with the messy version.</strong>
+              </button>
+              <button data-template="I want to calm down first.">
+                <span>Slow down</span>
+                <strong>Take a softer path first.</strong>
+              </button>
+              <button data-template="Help me prepare for a therapy session.">
+                <span>Prepare for therapy</span>
+                <strong>Organize what to bring up.</strong>
+              </button>
+              <button data-template="I want help deciding what to share with a provider.">
+                <span>Share carefully</span>
+                <strong>Choose what leaves your profile.</strong>
+              </button>
+            </div>
+
+            <section class="quiet-context is-hidden" aria-label="Private profile draft">
+              <div>
+                <span>Quietly organizing</span>
+                <strong id="pattern-preview">No profile changes yet</strong>
+              </div>
+              <div>
+                <span>Helpful next step</span>
+                <strong id="next-step-preview">Start wherever feels easiest</strong>
+              </div>
+              <button class="secondary-action" data-go="profile">Review draft</button>
+            </section>
+          </section>
+        </section>
+
+        <section class="view" id="profile" aria-labelledby="profile-title">
+          <div class="split-grid">
+            <section class="surface">
+              <p class="eyebrow">Context Passport</p>
+              <h1 id="profile-title">Review what Bridge understood</h1>
+              <p class="subcopy">These are draft notes created from the conversation. You decide what becomes part of your profile.</p>
+              <div class="profile-stack">
+                <article class="profile-row">
+                  <div>
+                    <span>Current concern</span>
+                    <strong id="profile-concern">Trouble sleeping after a relationship stressor</strong>
+                  </div>
+                  <span class="source-label ai">Draft summary</span>
+                </article>
+                <article class="profile-row">
+                  <div>
+                    <span>Known trigger</span>
+                    <strong id="profile-trigger">Delayed replies and repeated phone checking</strong>
+                  </div>
+                  <span class="source-label user">User said</span>
+                </article>
+                <article class="profile-row">
+                  <div>
+                    <span>What helped</span>
+                    <strong>Short breathing exercise and reaching out to a trusted person</strong>
+                  </div>
+                  <span class="source-label ai">Draft summary</span>
+                </article>
+                <article class="profile-row muted-row">
+                  <div>
+                    <span>Sensitive history</span>
+                    <strong>Not added from this conversation</strong>
+                  </div>
+                  <span class="source-label private">Self only</span>
+                </article>
+              </div>
+            </section>
+
+            <section class="surface bridge-card">
+              <p class="eyebrow">Bridge Card</p>
+              <h2>Short handoff draft</h2>
+              <dl class="detail-list">
+                <div>
+                  <dt>What happened</dt>
+                  <dd id="card-summary">Alex could not sleep and was stuck checking their phone after feeling rejected.</dd>
+                </div>
+                <div>
+                  <dt>What may help</dt>
+                  <dd>A brief human check-in, then a therapist conversation about sleep, reassurance, and feeling unsettled.</dd>
+                </div>
+                <div>
+                  <dt>Default privacy</dt>
+                  <dd>Raw chat, sensitive history, and self-only notes stay out unless selected.</dd>
+                </div>
+              </dl>
+              <button class="primary-action" data-go="consent">Choose what to share</button>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="consent" aria-labelledby="consent-title">
+          <div class="split-grid">
+            <section class="surface">
+              <p class="eyebrow">Consent</p>
+              <h1 id="consent-title">Choose what Dr. Maya Chen can see</h1>
+              <p class="subcopy">Share a focused summary, expand the packet, or keep sensitive areas private.</p>
+              <div class="scope-list" id="scope-list" aria-label="Sharing scope">
+                <label><input type="checkbox" checked data-scope="Bridge Card summary" /> Bridge Card summary</label>
+                <label><input type="checkbox" checked data-scope="Current concern" /> Current concern</label>
+                <label><input type="checkbox" checked data-scope="Known triggers" /> Known triggers</label>
+                <label><input type="checkbox" checked data-scope="What helped before" /> What helped before</label>
+                <label><input type="checkbox" data-scope="Medication history" /> Medication history</label>
+                <label><input type="checkbox" data-scope="Sensitive history" /> Sensitive history</label>
+                <label><input type="checkbox" data-scope="Raw chat transcript" /> Raw chat transcript</label>
+              </div>
+            </section>
+
+            <section class="surface share-summary">
+              <p class="eyebrow">Share preview</p>
+              <h2>Before anything leaves the vault</h2>
+              <div class="summary-block">
+                <h3>Included</h3>
+                <ul id="included-list"></ul>
+              </div>
+              <div class="summary-block quiet">
+                <h3>Not included</h3>
+                <ul id="excluded-list"></ul>
+              </div>
+              <div class="access-box">
+                <span>Access level</span>
+                <strong id="access-level">Summary only</strong>
+              </div>
+              <div class="access-box">
+                <span>Expires</span>
+                <strong>May 30, 2026</strong>
+              </div>
+              <a class="primary-action link-action" href="provider.html">Open provider preview</a>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

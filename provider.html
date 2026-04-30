@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bridge Provider</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="provider-app">
+    <div class="provider-shell">
+      <aside class="provider-sidebar">
+        <a class="brand" href="index.html" aria-label="Bridge consumer app">
+          <span class="brand-mark">B</span>
+          <span>Bridge</span>
+        </a>
+        <div class="patient-card">
+          <p class="eyebrow">Patient-approved packet</p>
+          <h1>Alex Morgan</h1>
+          <p>Access expires May 30, 2026</p>
+        </div>
+        <nav class="provider-nav" aria-label="Provider sections">
+          <a href="#bridge-card">Bridge Card</a>
+          <a href="#vault">Vault visibility</a>
+          <a href="#timeline">Timeline</a>
+          <a href="index.html">Consumer app</a>
+        </nav>
+      </aside>
+
+      <main class="provider-main">
+        <header class="provider-header">
+          <div>
+            <p class="eyebrow">Provider workspace</p>
+            <h2>Care handoff packet</h2>
+          </div>
+          <span class="status-pill green">Patient approved</span>
+        </header>
+
+        <section class="provider-grid">
+          <article class="provider-surface wide" id="bridge-card">
+            <p class="eyebrow">Bridge Card</p>
+            <h3>What Alex wants help with</h3>
+            <p class="big-summary">Alex had a difficult night with sleep disruption and repeated phone checking after feeling rejected. They want help discussing the pattern without having to retell everything from scratch.</p>
+            <div class="source-strip">
+              <span class="source-label user">User said</span>
+              <span class="source-label ai">AI summarized</span>
+              <span class="source-label private">Raw chat hidden</span>
+            </div>
+          </article>
+
+          <article class="provider-surface">
+            <p class="eyebrow">Session focus</p>
+            <h3>Suggested first topic</h3>
+            <p>Rejection spiral, reassurance seeking, sleep disruption, and what helped interrupt the loop.</p>
+          </article>
+
+          <article class="provider-surface">
+            <p class="eyebrow">Communication preference</p>
+            <h3>How to approach</h3>
+            <p>Direct and grounded. Avoid over-reassurance; help separate feelings from assumptions.</p>
+          </article>
+
+          <article class="provider-surface wide" id="vault">
+            <p class="eyebrow">Vault visibility</p>
+            <h3>What this provider can see</h3>
+            <div class="visibility-matrix">
+              <div><span>Bridge Card summary</span><strong>Visible</strong></div>
+              <div><span>Current concern</span><strong>Visible</strong></div>
+              <div><span>Known triggers</span><strong>Visible</strong></div>
+              <div><span>What helped before</span><strong>Visible</strong></div>
+              <div><span>Medication history</span><strong>Hidden</strong></div>
+              <div><span>Sensitive history</span><strong>Hidden</strong></div>
+              <div><span>Raw chat transcript</span><strong>Hidden</strong></div>
+              <div><span>Access duration</span><strong>30 days</strong></div>
+            </div>
+          </article>
+
+          <article class="provider-surface wide" id="timeline">
+            <p class="eyebrow">Recent timeline</p>
+            <h3>Context without transcript overload</h3>
+            <ol class="timeline-list">
+              <li><strong>Late evening:</strong> trouble sleeping and repeated phone checking.</li>
+              <li><strong>During chat:</strong> user asked to organize the situation and prepare for a session.</li>
+              <li><strong>After review:</strong> user approved a short Bridge Card and kept raw chat private.</li>
+            </ol>
+          </article>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
